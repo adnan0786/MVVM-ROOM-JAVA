@@ -15,13 +15,13 @@ import java.util.List;
 public interface ProjectDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    int insertProject(ProjectModel projectModel);
+    void insertProject(ProjectModel projectModel);
 
     @Update
-    int updateProject(ProjectModel projectModel);
+    void updateProject(ProjectModel projectModel);
 
     @Delete
-    int deleteProject(ProjectModel projectModel);
+    void deleteProject(ProjectModel projectModel);
 
     @Query("SELECT * FROM project")
     List<ProjectModel> getAllProjects();

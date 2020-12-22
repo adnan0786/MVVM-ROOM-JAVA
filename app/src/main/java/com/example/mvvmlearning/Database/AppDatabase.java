@@ -15,6 +15,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase instance;
     private static final Object LOCK = new Object();
 
+    public abstract ProjectDao projectDao();
+
     public static AppDatabase getInstance(Context context) {
         if (instance == null) {
             synchronized (LOCK) {
@@ -28,6 +30,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
         return instance;
     }
-
 
 }
