@@ -2,12 +2,17 @@ package com.example.mvvmlearning.Repository;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.mvvmlearning.Database.AppDatabase;
 import com.example.mvvmlearning.ProjectModel;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class AppRepo {
 
@@ -48,8 +53,26 @@ public class AppRepo {
         });
     }
 
-    public List<ProjectModel> getAllProject() {
-        return appDatabase.projectDao().getAllProjects();
+    public List<ProjectModel> getAllProjectFuture() throws ExecutionException, InterruptedException {
+
+        Callable<List<ProjectModel>> callable = new Callable<List<ProjectModel>>() {
+            @Override
+            public List<ProjectModel> call() throws Exception {
+                return appDatabase.projectDao().getAllProjectsFuture();
+            }
+        };
+
+        Future<List<ProjectModel>> future = Executors.newSingleThreadExecutor().submit(callable);
+        return future.get();
+
+
+    }
+
+    public LiveData<List<ProjectModel>> getAllProjectLive()  {
+
+        return appDatabase.projectDao().getAllProjectsLive();
+
+
     }
 
 }

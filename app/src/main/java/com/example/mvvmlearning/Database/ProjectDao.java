@@ -1,5 +1,6 @@
 package com.example.mvvmlearning.Database;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -24,7 +25,11 @@ public interface ProjectDao {
     void deleteProject(ProjectModel projectModel);
 
     @Query("SELECT * FROM project")
-    List<ProjectModel> getAllProjects();
+    LiveData<List<ProjectModel>> getAllProjectsLive();
+
+    @Query("SELECT * FROM project")
+    List<ProjectModel> getAllProjectsFuture();
+
 
     @Query("SELECT * FROM project WHERE pId=:id")
     ProjectModel getProject(int id);

@@ -4,11 +4,13 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.example.mvvmlearning.ProjectModel;
 import com.example.mvvmlearning.Repository.AppRepo;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ProjectViewModel extends AndroidViewModel {
 
@@ -32,8 +34,12 @@ public class ProjectViewModel extends AndroidViewModel {
         appRepo.deleteProject(projectModel);
     }
 
-    public List<ProjectModel> getAllProject() {
-        return appRepo.getAllProject();
+    public List<ProjectModel> getAllProjectFuture() throws ExecutionException, InterruptedException {
+        return appRepo.getAllProjectFuture();
+    }
+
+    public LiveData<List<ProjectModel>> getAllProjectLive() {
+        return appRepo.getAllProjectLive();
     }
 
 
