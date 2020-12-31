@@ -2,6 +2,7 @@ package com.example.mvvmlearning;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -14,7 +15,7 @@ import com.example.mvvmlearning.databinding.ActivityMainBinding;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnClickItemInterface {
 
     private ActivityMainBinding binding;
     private ProjectViewModel projectViewModel;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.projectRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ProjectAdapter();
+        adapter = new ProjectAdapter(this);
         binding.projectRecyclerView.setAdapter(adapter);
 
         binding.addProject.setOnClickListener(view -> {
@@ -47,10 +48,25 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<ProjectModel> projectModelList) {
                 if (projectModelList != null) {
                     adapter.setProjects(projectModelList);
+
                 }
             }
         });
 
+
+    }
+
+    @Override
+    public void onClickItem(ProjectModel projectModel, boolean isEdit) {
+
+
+        if (isEdit) {
+            Intent intent = new Intent(MainActivity.this, AddProjectActivity.class);
+            intent.putExtra("model", projectModel);
+            startActivity(intent);
+        } else {
+            projectViewModel.deleteProject(projectModel);
+        }
 
     }
 }

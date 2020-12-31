@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mvvmlearning.Adapter.ProjectAdapter.ViewHolder;
+import com.example.mvvmlearning.OnClickItemInterface;
 import com.example.mvvmlearning.ProjectModel;
 import com.example.mvvmlearning.R;
 import com.example.mvvmlearning.databinding.ProjectItemLayoutBinding;
@@ -17,6 +17,11 @@ import java.util.List;
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
 
     List<ProjectModel> projectModelList;
+    private OnClickItemInterface onClickItemInterface;
+
+    public ProjectAdapter(OnClickItemInterface onClickItemInterface) {
+        this.onClickItemInterface = onClickItemInterface;
+    }
 
     @NonNull
     @Override
@@ -34,6 +39,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
             ProjectModel projectModel = projectModelList.get(position);
 
             holder.binding.setProjectModel(projectModel);
+            holder.binding.setListener(onClickItemInterface);
         }
 
 

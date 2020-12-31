@@ -1,11 +1,14 @@
 package com.example.mvvmlearning;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "project")
-public class ProjectModel {
+public class ProjectModel implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     public int pId;
@@ -16,43 +19,40 @@ public class ProjectModel {
     public int watcher;
     public int issues;
 
-    public int getpId() {
-        return pId;
+    public ProjectModel() {
     }
 
-    public void setpId(int pId) {
-        this.pId = pId;
+    protected ProjectModel(Parcel in) {
+        pId = in.readInt();
+        title = in.readString();
+        language = in.readString();
+        watcher = in.readInt();
+        issues = in.readInt();
     }
 
-    public String getTitle() {
-        return title;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(pId);
+        dest.writeString(title);
+        dest.writeString(language);
+        dest.writeInt(watcher);
+        dest.writeInt(issues);
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getLanguage() {
-        return language;
-    }
+    public static final Creator<ProjectModel> CREATOR = new Creator<ProjectModel>() {
+        @Override
+        public ProjectModel createFromParcel(Parcel in) {
+            return new ProjectModel(in);
+        }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public int getWatcher() {
-        return watcher;
-    }
-
-    public void setWatcher(int watcher) {
-        this.watcher = watcher;
-    }
-
-    public int getIssues() {
-        return issues;
-    }
-
-    public void setIssues(int issues) {
-        this.issues = issues;
-    }
+        @Override
+        public ProjectModel[] newArray(int size) {
+            return new ProjectModel[size];
+        }
+    };
 }

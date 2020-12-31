@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,6 +19,8 @@ public class AddProjectActivity extends AppCompatActivity {
     private int watcher, issues;
     private String[] languages = {"Java", "Kotlin", "PHP", "Dart", "Flutter"};
     private ProjectViewModel projectViewModel;
+    private ProjectModel projectModel;
+    private boolean isEdit = false;
 
 
     @Override
@@ -29,23 +32,48 @@ public class AddProjectActivity extends AppCompatActivity {
         initDropDown();
         projectViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(ProjectViewModel.class);
 
+        if (getIntent().hasExtra("model")) {
+            projectModel = getIntent().getParcelableExtra("model");
+            binding.edtTitle.setText(projectModel.title);
+            binding.edtIssue.setText(String.valueOf(projectModel.issues));
+            binding.edtWatcher.setText(String.valueOf(projectModel.watcher));
+            isEdit = true;
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         binding.btnAddProject.setOnClickListener(view -> {
 
-            title = binding.edtTitle.getText().toString().trim();
-            watcher = Integer.parseInt(binding.edtWatcher.getText().toString().trim());
-            issues = Integer.parseInt(binding.edtIssue.getText().toString().trim());
+            if (isEdit) {
+                title = binding.edtTitle.getText().toString().trim();
+                watcher = Integer.parseInt(binding.edtWatcher.getText().toString().trim());
+                issues = Integer.parseInt(binding.edtIssue.getText().toString().trim());
 
-            ProjectModel projectModel = new ProjectModel();
-            projectModel.title = title;
-            projectModel.issues = issues;
-            projectModel.watcher = watcher;
-            projectModel.language = lang;
-            projectViewModel.insertProject(projectModel);
+                projectModel.title = title;
+                projectModel.issues = issues;
+                projectModel.watcher = watcher;
+                projectModel.language = lang;
 
-            finish();
+                projectViewModel.updateProject(projectModel);
+                Toast.makeText(this, "Updated", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+
+                title = binding.edtTitle.getText().toString().trim();
+                watcher = Integer.parseInt(binding.edtWatcher.getText().toString().trim());
+                issues = Integer.parseInt(binding.edtIssue.getText().toString().trim());
+
+                projectModel = new ProjectModel();
+                projectModel.title = title;
+                projectModel.issues = issues;
+                projectModel.watcher = watcher;
+                projectModel.language = lang;
+                projectViewModel.insertProject(projectModel);
+                Toast.makeText(this, "Inserted", Toast.LENGTH_SHORT).show();
+
+                finish();
+            }
+
 
         });
 
